@@ -1,22 +1,17 @@
+rm(list=ls())
 
-source("./functions/999.support.functions.R")
+#source('~/Dropbox/exchange/sasanelli/elab/999.support.functions.R', chdir = TRUE)
+source("/home/fmarella/src/R/functions/999.support.functions.R")
 
-# matrice istanze x attributi
-myDataset <- matrix(c(
-  1,0,0,0,2,
-  0,0,3,0,0,
-  0,0,4,0,8,
-  0,4,0,0,0,
-  2,1,6,4,0), byrow=T, ncol=5)
-
-require(foreign, quietly = TRUE)
+library(foreign)
+#myDataset <- read.arff("~/Google Drive/papers.new/frozen/2013boffoli/data/MDP/D1/CM1.arff")
 myDataset <- read.arff("file:///home/fmarella/Documenti/materiale_tesi/NASA-SoftwareDefectDataSets/MDP/D'/CM1.arff")
 
-set.seed(12345)
-
+feature.vector <- myDataset[, -38]
 nobs <- nrow(myDataset)
+myDataset.train.index <- sample(nrow(feature.vector), 0.75 * nobs)
+myDataset.test.index <- sample(setdiff(seq_len(nrow(feature.vector)), myDataset.train.index), 0.25 * nobs)
+myDataset.train <- feature.vector[myDataset.train.index, ]
+myDataset.test <- feature.vector[myDataset.test.index, ]
 
-myDataset.train <- sample(nrow(myDataset), 0.75 * nobs)
-myDataset.test <- sample(setdiff(seq_len(nrow(myDataset)), myDataset.train), 0.25 * nobs)
-
-svd.pc(myDataset.train, myDataset.test, 3)
+svd.pc(myDataset.train, as.matrix(myDataset.test), k=10, plot=FALSE)
