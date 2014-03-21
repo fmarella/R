@@ -33,12 +33,12 @@ svd.pc <- function(train, test, k, trainset = deparse(substitute(train)), center
     }
     ## Calcola gli score delle componenenti principali mediante la SVD
     Z <- svd(train)$u[, 1:rank.train] %*% diag(svd(train)$d[1:rank.train])
-    colnames(Z) <- paste("PC", 1:rank.train, sep = "")
+    colnames(Z) <- paste("PC", 1:ncol(Z), sep = "")
     rownames(Z) <- rownames(train)
     ## Z <- round(cov(Z),4)
     svd.pcs <- list(rank = rank.train, scores.train = Z, singular.values = svd(train)$d[1:rank.train], 
         variances = diag(cov(Z)), loadings = svd(train)$v)
-    colnames(svd.pcs$loadings) <- paste("PC", 1:rank.train, sep = "")
+    colnames(svd.pcs$loadings) <- paste("PC", 1:ncol(svd.pcs$loadings), sep = "")
     rownames(svd.pcs$loadings) <- colnames(train)
     ## Utilizziamo lo stesso sistema di coordinate che abbiamo trovato per il training
     ## set, proiettando i dati contenuti in 'test' secondo l'equazione Z_test = X_test
@@ -54,7 +54,7 @@ svd.pc <- function(train, test, k, trainset = deparse(substitute(train)), center
         test <- scale(test, center = F, scale = scales)
     }
     svd.pcs$scores.test = test %*% svd.pcs$loadings
-    colnames(svd.pcs$scores.test) <- paste("PC", 1:rank.train, sep = "")
+    colnames(svd.pcs$scores.test) <- paste("PC", 1:ncol(svd.pcs$scores.test), sep = "")
     ## Calcola la varianza cumulata in percentuale
     lenght.total <- sum(diag(cov(Z)))
     var.percent <- cumsum(diag(cov(Z)))/lenght.total
