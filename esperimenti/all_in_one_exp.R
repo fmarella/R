@@ -57,9 +57,11 @@ for (fdataset in flist) {
   myDataset.train <- myDataset[myDataset.train.index, c(input, target)]
   myDataset.test <- myDataset[myDataset.test.index, c(input, target)]
   
-  myDataset.train.labels <- myDataset.train[,ncol(myDataset.train)]
-  myDataset.test.labels <- myDataset.test[,ncol(myDataset.test)]
-  
+  #myDataset.train.labels <- myDataset.train[,ncol(myDataset.train)]
+  #myDataset.test.labels <- myDataset.test[,ncol(myDataset.test)]
+  myDataset.train.labels <- myDataset_o[myDataset.train.index, ncol(myDataset_o)]
+  myDataset.test.labels <- myDataset_o[myDataset.test.index, ncol(myDataset_o)]  
+
   ## Data transformation - normalization and scaling of numeric attributes
   #   if (opts.scale) {
   #     myDataset <- lapply(myDataset_o[, input], scale)
