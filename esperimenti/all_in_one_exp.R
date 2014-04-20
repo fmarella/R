@@ -6,7 +6,6 @@ opts.my_seed <- 1347
 # opts.scale <- T
 opts.normalize <- F
 opts.svm_kernel <- "radial"
-opts.pc <- 0
 ##########################################################
 
 # Load libraries for data partitioning, confusion matrix.
@@ -29,11 +28,7 @@ normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
 
-if (opts.pc == 0) {
-  print("feature set completo")
-} else {
-  print(paste("CP: ", opts.pc, sep=''))
-}
+print("feature set completo")
 
 for (fdataset in flist) {
   ds_name <- substr(basename(fdataset), 1, 3)
@@ -42,10 +37,7 @@ for (fdataset in flist) {
   myDataset_o <- na.omit(read.arff(fdataset))
   
   # 
-  if (opts.pc == 0)
-    input <- colnames(myDataset_o)[-ncol(myDataset_o)]
-#   if (opts.pc == 2)
-  
+  input <- colnames(myDataset_o)[-ncol(myDataset_o)]
   target <- colnames(myDataset_o)[ncol(myDataset_o)]
   
   myDataset <- myDataset_o
@@ -79,7 +71,14 @@ for (fdataset in flist) {
                           k = 1:25,
                           tunecontrol = tune.control(sampling = "cross", cross = 10))
     print(paste("knn Accuratezza: ", round((1 - tuned.knn$best.performance) * 100, 3), " %", sep=''))
+  }, warning = function(war) {
+    print(paste("Warning:", war))
+  }, error = function(err) {
+    print(paste("Caught:", err))
+  }, finally = {
+  })    
     
+  tryCatch({
     ## SVM
     tuned.svm <- tune.svm(Defective~., kernel = opts.svm_kernel, data = myDataset.train,
                           gamma = 10^(-6:-1), cost = 10^(1:2),

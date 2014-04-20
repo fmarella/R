@@ -6,8 +6,7 @@ rm(list=ls())
 opts.my_seed <- 134
 opts.scale <- F
 opts.binning <- F
-opts.pc <- 2
-
+opts.pc <- 2 #0,2,3,5
 ##########################################################
 # Supervised Learning using Naive Bayes algorithm.
 ##########################################################
@@ -75,20 +74,16 @@ for (fdataset in flist) {
     pred <- predict(fit$finalModel, myDataset.test)#, type="raw")
     CrossTable(pred$class, myDataset.test.labels,
                prop.chisq=F, prop.t=F, dnn=c('pred', 'actual'))
-#     table(predict(fit$finalModel, myDataset.test), myDataset.test.labels)
-    
   } else {
     pcs.D1 <- svd.pc(as.matrix(myDataset.train), 
                      as.matrix(myDataset.test),
-                     k = 5, plot = FALSE)
+                     k = opts.pc, plot = FALSE)
     
-#     pcs.D1$scores.train
-#     pcs.D1$scores.test
     myDataset.train.labels <- myDataset_o[myDataset.train.index,ncol(myDataset_o)]
     myDataset.test.labels <- myDataset_o[myDataset.test.index,ncol(myDataset_o)]
     
     nbGrid <- expand.grid(usekernel=T, fL=c(0:3))
-    fit <- train(pcs.D1$scores.train[,1:2], myDataset.train.labels, "nb",
+    fit <- train(pcs.D1$scores.train[,1:opts.pc], myDataset.train.labels, "nb",
                  trControl = trainControl(method="cv", number=10),
                  tuneGrid = nbGrid)
     pred <- predict(fit$finalModel, pcs.D1$scores.test)#, type="raw")
