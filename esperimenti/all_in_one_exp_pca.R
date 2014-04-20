@@ -79,19 +79,19 @@ for (fdataset in flist) {
                      as.matrix(myDataset.test),
                      k = 5, plot = FALSE)
     ## kNN
-    tuned.knn <- tune.knn(x=pcs.D1$scores.train[,1:2], y=myDataset.train.labels,
+    tuned.knn <- tune.knn(x=pcs.D1$scores.train[,1:opts.pc], y=myDataset.train.labels,
                           k = 1:25,
                           tunecontrol = tune.control(sampling = "cross", cross = 10))
     print(paste("knn Accuratezza: ", round((1 - tuned.knn$best.performance) * 100, 3), " %", sep=''))
     
     ## SVM
-    tuned.svm <- tune.svm(x=pcs.D1$scores.train[,1:2], kernel = opts.svm_kernel,# data = myDataset.train,
+    tuned.svm <- tune.svm(x=pcs.D1$scores.train[,1:opts.pc], kernel = opts.svm_kernel,# data = myDataset.train,
                           y=myDataset.train.labels,
                           gamma = 10^(-6:-1), cost = 10^(1:2),
                           tunecontrol = tune.control(sampling = "cross", cross = 10))
     
     # Get the accuracy and other measures.
-    final.pred <- predict(tuned.svm$best.model, pcs.D1$scores.test[,1:2])
+    final.pred <- predict(tuned.svm$best.model, pcs.D1$scores.test[,1:opts.pc])
     conf.matrix <- table(true = myDataset.test.labels, pred = final.pred)
     
     print(paste("svm Accuratezza:", round(classAgreement(conf.matrix)$diag*100, 3), "%", sep=" "))
