@@ -82,16 +82,10 @@ for (fdataset in flist) {
                      as.matrix(myDataset.test),
                      k = 5, plot = FALSE)
     
-    pcs.D1$scores.train
-    pcs.D1$scores.test
+#     pcs.D1$scores.train
+#     pcs.D1$scores.test
     myDataset.train.labels <- myDataset_o[myDataset.train.index,ncol(myDataset_o)]
     myDataset.test.labels <- myDataset_o[myDataset.test.index,ncol(myDataset_o)]
-    
-#     nbm <- naiveBayes(pcs.D1$scores.train, myDataset.train.labels, laplace=1)
-#     pred <- predict(nbm, pcs.D1$scores.test, type="class")
-#     CrossTable(pred, myDataset.test.labels)
-#     conf.matrix <- table(pred=pred, true=myDataset.test.labels)
-#     classAgreement(conf.matrix)$diag
     
     nbGrid <- expand.grid(usekernel=T, fL=c(0:3))
     fit <- train(pcs.D1$scores.train[,1:2], myDataset.train.labels, "nb",
