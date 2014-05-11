@@ -2,11 +2,11 @@ rm(list=ls())
 ##########################################################
 # Options
 ##########################################################
-opts.my_seed <- 1347
+opts.my_seed <- 1234
 # opts.scale <- T
 opts.normalize <- F
 opts.svm_kernel <- "radial"
-opts.pc <- 2
+opts.pc <- 2 #2,3,5
 ##########################################################
 
 # Load libraries for data partitioning, confusion matrix.
@@ -77,6 +77,7 @@ for (fdataset in flist) {
                           k = 1:25,
                           tunecontrol = tune.control(sampling = "cross", cross = 10))
     print(paste("knn Accuratezza: ", round((1 - tuned.knn$best.performance) * 100, 3), " %", sep=''))
+    print(summary(tuned.knn))
   }, warning = function(war) {
     print(paste("Warning:", war))
   }, error = function(err) {
@@ -96,6 +97,7 @@ for (fdataset in flist) {
     conf.matrix <- table(true = myDataset.test.labels, pred = final.pred)
     
     print(paste("svm Accuratezza:", round(classAgreement(conf.matrix)$diag*100, 3), "%", sep=" "))
+    print(summary(tuned.svm))
   }, warning = function(war) {
     print(paste("Warning:", war))
   }, error = function(err) {

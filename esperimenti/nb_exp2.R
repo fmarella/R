@@ -14,7 +14,7 @@ opts.pc <- 2 #0,2,3,5
 library(e1071)
 library(class)
 library(gmodels)
-library(ROCR)
+
 library(caret)
 require(foreign, quietly = TRUE)
 

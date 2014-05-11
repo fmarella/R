@@ -38,19 +38,6 @@ for (fdataset in flist) {
     ## scores delle PCs sul trainset (utilizzarne solo la prima, che spiega già il
     ## 100%, oppure le prime tre o le prime cinque per confrontare)
     pcs.D1$scores.train
-    
-    #myDataset["Defective"] <- myDataset_o[,"Defective"]
-    
-#     knn(pcs.D1$scores.train[,1:3], test=pcs.D1$scores.test[,1:3], cl=myDataset.train.labels,
-#         #myDataset.train[,ncol(myDataset.train)],
-#         k=21)
-#     library(kernlab)
-#     m <- ksvm(pcs.D1$scores.train[,1:3], data=pcs.D1$scores.train[,1:3],
-#               kernel="rbfdot", C=1)
-#     p <- predict(m, pcs.D1$scores.test[,1:3], type="response")
-#     conf.matrix <- table(pred=p, true=myDataset.test.labels)
-#     print(paste("svm Accuratezza:", round(classAgreement(conf.matrix)$diag*100, 3), "%", sep=" "))
-
 
     ## scores del test set proiettati nello stesso sistema di riferimento del training
     ## set. E' rispetto a queste che bisogna valutare l'accuratezza se usiamo le
@@ -80,13 +67,13 @@ for (fdataset in flist) {
     library(corrplot)
     y <- myDataset.train
     colnames(y) <- c(paste("A", 1:ncol(y), sep=''))
-    png(filename=paste("corrplot.prepca.", ds_name, ".png", sep=''), width=380, height=380, title="foobar")
+    png(filename=paste("corrplot_prepca_", ds_name, ".png", sep=''), width=380, height=380, title="foobar")
     corrplot(cor(y), method = "circle", type = "upper", tl.cex = 0.8, mar=c(1,1,1,1),
              title=paste("Correlazione dataset", ds_name, "originale", sep=' '))
     dev.off()
     ## nelle coordinate ruotate, ossia le PCs, le ridondanze sparisocono ovviamente
     ## del tutto. Stupefacente, vero?
-    png(filename=paste("corrplot.postpca.", ds_name, ".png", sep=''), width=380, height=380)
+    png(filename=paste("corrplot_postpca_", ds_name, ".png", sep=''), width=380, height=380)
     corrplot(cor(pcs.D1$scores.train), title=paste("Correlazione dataset", ds_name, "con PC", sep=' '),
              method = "circle", type = "upper", tl.cex=0.80, mar=c(1,1,1,1)) #, )#, tl.pos=45)
     ## Questo vuol dire che spesso vengono spesi un sacco di soldi e perso tempo
